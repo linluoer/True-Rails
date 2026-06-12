@@ -8,7 +8,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-/** 音效不入存档，不违反无残留原则（§10）。 */
 public final class TRSounds {
     public static final DeferredRegister<SoundEvent> REGISTER =
             DeferredRegister.create(Registries.SOUND_EVENT, TrueRails.MODID);

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/** 服务端运行态（不持久化），实体卸载即清除。 */
 public final class TrainRuntime {
     private static final Map<UUID, TrainRuntime> MAP = new HashMap<>();
 
@@ -21,18 +20,14 @@ public final class TrainRuntime {
     public double lastSyncedSpeed;
     public UUID driver;
 
-    /** M4：上一刻位置（位移法测速）。 */
     @Nullable public Vec3 lastPos;
 
-    /** M1.5：停靠已累计刻数 / 发车宽限剩余距离。 */
     public int dwellTicks;
     public double graceBlocks;
 
-    /** M6：低燃料警示冷却（刻）；强制通过长笛已鸣标记（驶离动力轨段重置）。 */
     public int lowFuelCooldown;
     public boolean forcePassWhistled;
 
-    /** M3：车头走过的路径，车厢沿其回放跟随。 */
     public final PathRecorder path = new PathRecorder();
 
     public static TrainRuntime get(AbstractMinecart cart) {
@@ -47,7 +42,7 @@ public final class TrainRuntime {
         private static final double MIN_STEP = 0.25;
         private static final double MAX_LENGTH = TrainGraph.MAX_SIZE * 1.65 + 16.0;
 
-        private final ArrayDeque<Vec3> points = new ArrayDeque<>(); // 首=最新
+        private final ArrayDeque<Vec3> points = new ArrayDeque<>();
 
         public void record(Vec3 pos) {
             Vec3 newest = points.peekFirst();

@@ -13,15 +13,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
-/**
- * 乘车音效循环（§10）：
- * - rail_clack: 间隔 = 4/速度 秒, pitch = 0.85 + speed/64×0.5
- * - brake_squeal: 紧急制动期间循环, 音量随减速度
- * 另：紧急制动/超速时的本地火花粒子（客户端权威车在服务端不模拟）。
- */
 @EventBusSubscriber(modid = TrueRails.MODID, value = Dist.CLIENT)
 public final class ClientSounds {
-    private static double clackTimer;   // 秒
+    private static double clackTimer;
     private static int squealCooldown;
     private static float lastSpeed;
 
@@ -36,10 +30,9 @@ public final class ClientSounds {
         }
 
         float speed = ClientHudState.actualSpeed;
-        float decel = Math.max(0.0f, lastSpeed - speed) * 20.0f; // 格/秒²
+        float decel = Math.max(0.0f, lastSpeed - speed) * 20.0f;
         lastSpeed = speed;
 
-        // —— rail_clack 循环 ——
         if (speed > 3.0f) {
             clackTimer += 0.05;
             double interval = 4.0 / speed;
@@ -54,7 +47,6 @@ public final class ClientSounds {
             clackTimer = 0;
         }
 
-        // —— brake_squeal 循环（空格紧急制动期间）——
         boolean braking = mc.options.keyJump.isDown();
         if (braking && speed > 2.0f) {
             if (squealCooldown <= 0) {
@@ -62,9 +54,9 @@ public final class ClientSounds {
                         0.25f, 1.0f);
                 mc.level.playLocalSound(cart.getX(), cart.getY(), cart.getZ(),
                         TRSounds.BRAKE_SQUEAL.get(), SoundSource.NEUTRAL, vol, 1.0f, false);
-                squealCooldown = 7; // 约 0.35 秒循环
+                squealCooldown = 7;
             }
-            // 火花
+
             if (cart.tickCount % 2 == 0) {
                 mc.level.addParticle(ParticleTypes.LAVA,
                         cart.getX(), cart.getY() + 0.1, cart.getZ(), 0.0, 0.0, 0.0);
@@ -72,7 +64,6 @@ public final class ClientSounds {
         }
         if (squealCooldown > 0) squealCooldown--;
 
-        // —— 超速轮部火花（§4）——
         if (speed > TRConfig.MAX_SPEED.get() + 0.5 && cart.tickCount % 3 == 0) {
             mc.level.addParticle(ParticleTypes.CRIT,
                     cart.getX(), cart.getY() + 0.1, cart.getZ(), 0.0, 0.05, 0.0);

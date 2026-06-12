@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/** 编组遍历：邻接槽位无向图 → 从端点起的有序列表，车头在 index 0。 */
 public final class TrainGraph {
     public static final int MAX_SIZE = 8;
 
@@ -23,13 +22,6 @@ public final class TrainGraph {
         return level.getEntity(id) instanceof AbstractMinecart cart && cart.isAlive() ? cart : null;
     }
 
-    /**
-     * 车头端点确定性选取（所有车厢 tick 必须得出同一车头）：
-     * 1. 动力矿车（§2.3 永远车头）
-     * 2. 第一乘客为玩家的端点（客户端权威驾驶；多个则取乘客 UUID 最小，
-     *    与 ClientDrive.shouldSim 的仲裁规则一致）
-     * 3. UUID 最小端点
-     */
     public static List<AbstractMinecart> ordered(ServerLevel level, AbstractMinecart start) {
         Set<AbstractMinecart> component = new LinkedHashSet<>();
         collect(level, start, component);
@@ -39,7 +31,7 @@ public final class TrainGraph {
         for (AbstractMinecart c : component) {
             if (resolvedNeighbors(level, c, component) <= 1) endpoints.add(c);
         }
-        if (endpoints.isEmpty()) endpoints.add(start); // 环（理论不可达），兜底
+        if (endpoints.isEmpty()) endpoints.add(start);
 
         AbstractMinecart headEnd = null;
         for (AbstractMinecart c : endpoints) {

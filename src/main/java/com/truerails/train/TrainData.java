@@ -8,11 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * 持久化数据附加（挂在矿车实体上）。
- * front/back 为两个无向邻接槽位（不保证指向车头方向，编组顺序由 TrainGraph 现场推导）。
- * 卸载模组后字段被忽略，矿车退化为原版矿车（无残留原则）。
- */
 public final class TrainData {
     public static final Codec<TrainData> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.DOUBLE.optionalFieldOf("cruise", 0.0).forGetter(d -> d.cruise),
@@ -28,7 +23,7 @@ public final class TrainData {
     public double fuel;
     @Nullable public UUID front;
     @Nullable public UUID back;
-    @Nullable public UUID owner; // 连接者=车主（M5 加载配额用）
+    @Nullable public UUID owner;
 
     public TrainData() {}
 

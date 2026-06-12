@@ -18,7 +18,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 
-/** 相邻车间渲染下垂链条（原版链条贴图，§2.6）。 */
 @EventBusSubscriber(modid = TrueRails.MODID, value = Dist.CLIENT)
 public final class ChainRenderer {
     private static final ResourceLocation CHAIN_TEX =
@@ -34,8 +33,6 @@ public final class ChainRenderer {
 
         ClientLinkState.purgeExpired();
 
-        // 若 getPartialTick() 返回 DeltaTracker 而非 float，
-        // 改为 event.getPartialTick().getGameTimeDeltaPartialTick(false)
         float pt = event.getPartialTick().getGameTimeDeltaPartialTick(false);
         Vec3 cam = mc.gameRenderer.getMainCamera().getPosition();
         PoseStack pose = event.getPoseStack();
@@ -56,7 +53,6 @@ public final class ChainRenderer {
             double dist = pa.distanceTo(pb);
             if (dist < 0.1 || dist > 12.0) continue;
 
-            // 下垂量：近时松弛、绷紧时变直
             float sag = (float) Math.min(0.35, Math.max(0.02, (2.2 - dist) * 0.25 + 0.1));
 
             int light = LevelRenderer.getLightColor(mc.level,
@@ -71,15 +67,15 @@ public final class ChainRenderer {
                 double t = (double) i / SEGMENTS;
                 double tp = (double) (i - 1) / SEGMENTS;
                 Vec3 p = pa.lerp(pb, t).subtract(0, sag * 4 * t * (1 - t), 0);
-                // 垂直带（链条正面）
+
                 quad(vc, mat, light,
                         prev.add(0, HALF_W, 0), p.add(0, HALF_W, 0),
                         p.subtract(0, HALF_W, 0), prev.subtract(0, HALF_W, 0));
-                // 水平带（交叉面）
+
                 quad(vc, mat, light,
                         prev.add(perp), p.add(perp), p.subtract(perp), prev.subtract(perp));
                 prev = p;
-                // tp 未用于 UV（每段 v 取 0..1），保留变量名以示意
+
             }
         }
         pose.popPose();
@@ -88,12 +84,12 @@ public final class ChainRenderer {
 
     private static void quad(VertexConsumer vc, Matrix4f mat, int light,
                              Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4) {
-        // 链条贴图左侧链环条带 u: 0..3/16
+
         vertex(vc, mat, v1, 0.0f, 0.0f, light);
         vertex(vc, mat, v2, 0.0f, 1.0f, light);
         vertex(vc, mat, v3, 0.1875f, 1.0f, light);
         vertex(vc, mat, v4, 0.1875f, 0.0f, light);
-        // 反面（NoCull 下可省，但部分驱动背面剔除行为不一致，补一份保险）
+
         vertex(vc, mat, v4, 0.1875f, 0.0f, light);
         vertex(vc, mat, v3, 0.1875f, 1.0f, light);
         vertex(vc, mat, v2, 0.0f, 1.0f, light);

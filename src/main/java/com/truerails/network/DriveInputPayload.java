@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/** C→S 驾驶输入，单字节位掩码。坐任意车厢都可驾驶，输入转发车头（§3）。 */
 public record DriveInputPayload(byte mask) implements CustomPacketPayload {
     public static final byte FWD = 1;
     public static final byte BACK = 2;

@@ -38,7 +38,6 @@ public final class TrainTicker {
 
         TrainData data = cart.getData(TRAttachments.TRAIN_DATA);
 
-        // —— 单车 ——
         if (data.linkCount() == 0) {
             boolean manned = hasPlayer(cart);
             boolean fueled = isFueled(cart, data);
@@ -76,7 +75,6 @@ public final class TrainTicker {
             return;
         }
 
-        // —— 车厢自定位（M9: 服务端权威，载人车厢同样由服务端定位）——
         CorridorLoader.release(level, cart);
 
         int idx = train.indexOf(cart);
@@ -158,7 +156,7 @@ public final class TrainTicker {
         double speed = cart.getDeltaMovement().horizontalDistance() * 20.0;
         boolean periodic = speed > 8.0 && cart.tickCount % 10 == 0;
         if (Math.abs(speed - rt.lastSyncedSpeed) > SYNC_DELTA || periodic) {
-            cart.hurtMarked = true; // M9: 服务端权威，对乘客同样下发运动包
+            cart.hurtMarked = true;
             rt.lastSyncedSpeed = speed;
         }
     }

@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-/** 沿轨走查：一次走轨同时返回弯道距离 / 坡道距离 / 停车标距离。客户端/服务端共用。 */
 public final class TrackScanner {
 
     public record ScanResult(double distCurve, double distSlope, double distStop) {
@@ -37,7 +36,7 @@ public final class TrackScanner {
 
         double dCurve = -1, dSlope = -1, dStop = -1;
         for (int i = 1; i <= maxDist; i++) {
-            if (!level.hasChunkAt(pos)) break; // 未加载区块：终止扫描（不触发同步加载）
+            if (!level.hasChunkAt(pos)) break;
             BlockState state = level.getBlockState(pos);
             if (!(state.getBlock() instanceof BaseRailBlock rail)) break;
             RailShape shape = state.getValue(rail.getShapeProperty());

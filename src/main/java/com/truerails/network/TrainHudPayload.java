@@ -9,7 +9,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/** S→C HUD 同步小包，每 5 刻发给乘客。 */
 public record TrainHudPayload(float cruise, float fuelPct, boolean hasFurnace, int state)
         implements CustomPacketPayload {
 
@@ -29,7 +28,7 @@ public record TrainHudPayload(float cruise, float fuelPct, boolean hasFurnace, i
     }
 
     public static void handle(TrainHudPayload p, IPayloadContext ctx) {
-        // ClientHudState 为纯数据类（无 Minecraft 客户端类引用），专用服务器上类加载安全
+
         ctx.enqueueWork(() -> {
             ClientHudState.cruise = p.cruise();
             ClientHudState.fuelPct = p.fuelPct();

@@ -14,7 +14,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.ArrayList;
 import java.util.List;
 
-/** 燃料 GUI；右下角按钮展开调速面板（同屏面板，避免容器菜单生命周期问题）。 */
 public class FuelScreen extends AbstractContainerScreen<FurnaceCartMenu> {
     private static final ResourceLocation TEX =
             ResourceLocation.fromNamespaceAndPath(TrueRails.MODID, "textures/gui/fuel_cart.png");
@@ -34,7 +33,7 @@ public class FuelScreen extends AbstractContainerScreen<FurnaceCartMenu> {
     protected void init() {
         super.init();
         gearButtons.clear();
-        // 右下角：展开/收起调速面板
+
         addRenderableWidget(Button.builder(
                         Component.translatable("truerails.gui.speed_btn"), b -> togglePanel())
                 .bounds(leftPos + imageWidth + 2, topPos + imageHeight - 22, 56, 18)
@@ -72,7 +71,7 @@ public class FuelScreen extends AbstractContainerScreen<FurnaceCartMenu> {
     @Override
     protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         g.blit(TEX, leftPos, topPos, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-        // 燃料条填充 + 百分比
+
         int pm = menu.fuelPermille();
         int w = 160 * pm / 1000;
         if (w > 0) g.fill(leftPos + 8, topPos + 18, leftPos + 8 + w, topPos + 28, 0xFFE07820);

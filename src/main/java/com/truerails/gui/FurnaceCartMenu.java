@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.Nullable;
 
-/** 动力矿车燃料菜单：1 燃料槽 + 玩家背包。燃料量/档位经 DataSlot 同步。 */
 public class FurnaceCartMenu extends AbstractContainerMenu {
     @Nullable
     private final MinecartFurnace cart;
@@ -32,7 +31,7 @@ public class FurnaceCartMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(fuelInv, 0, 80, 35) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                // NeoForge IItemStackExtension；若编译失败改用 CommonHooks.getBurnTime
+
                 return stack.getBurnTime(RecipeType.SMELTING) > 0;
             }
         });
@@ -78,7 +77,6 @@ public class FurnaceCartMenu extends AbstractContainerMenu {
         super.broadcastChanges();
     }
 
-    /** 槽内燃料逐个转为储量，直到容量不足；桶类返还空桶。 */
     private void convertFuel() {
         TrainData d = cart.getData(TRAttachments.TRAIN_DATA);
         double cap = TRConfig.FUEL_CAPACITY.get();

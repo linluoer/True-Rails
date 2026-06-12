@@ -20,7 +20,7 @@ public final class TRClient {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // Mods 列表 → TrueRails → Config 按钮（NeoForge 内置配置界面）
+
         ModList.get().getModContainerById(TrueRails.MODID).ifPresent(container ->
                 container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new));
     }

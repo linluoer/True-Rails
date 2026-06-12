@@ -28,13 +28,6 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-/**
- * 巡航控制器——唯一物理权威（M9）。
- * 1.21.1 矿车无 controllingPassenger，客户端不发载具移动包，
- * 服务端统一模拟载人与无人列车；驾驶输入经 DriveInputPayload 上行。
- * 速度上限由 Mixin(getMaxSpeedWithRail) 硬解锁；
- * 写回预除 0.75 补偿原版"载人矿车每刻 ×0.75"阻尼（M9fix）。
- */
 public final class CruiseController {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final boolean DEBUG = false;
@@ -78,7 +71,6 @@ public final class CruiseController {
 
         TrainState st = TrainState.byOrdinal(data.state);
 
-        // ============ DOCKED ============
         if (st == TrainState.DOCKED) {
             head.setDeltaMovement(0.0, head.getDeltaMovement().y, 0.0);
             rt.dwellTicks++;
@@ -96,7 +88,6 @@ public final class CruiseController {
             return;
         }
 
-        // ============ DEPARTING 宽限 ============
         boolean inGrace = st == TrainState.DEPARTING;
         if (inGrace) {
             if (onPoweredRailBlock) {
@@ -119,7 +110,6 @@ public final class CruiseController {
                     TRSounds.WHISTLE_LONG.get(), SoundSource.NEUTRAL, 1.4f, 1.0f);
         }
 
-        // ============ 停靠触发 ============
         if (stopActive && onStopRail && speed < DOCK_SPEED) {
             head.setPos(railPos.getX() + 0.5, head.getY(), railPos.getZ() + 0.5);
             head.setDeltaMovement(0.0, head.getDeltaMovement().y, 0.0);
@@ -135,7 +125,6 @@ public final class CruiseController {
         double maxSpeed = fueled ? TRConfig.MAX_SPEED.get()
                 : (driver != null ? TRConfig.MANUAL_DRIVE_LIMIT.get() : 0.0);
 
-        // —— 巡航目标：有人 W/S/空格；无人车 cruise=GUI 档位 ——
         if (driver != null) {
             if (braking) {
                 data.cruise = 0.0;
@@ -147,7 +136,6 @@ public final class CruiseController {
             }
         }
 
-        // —— 低燃料警示 + 黑烟 ——
         if (furnaceHead) {
             double pct = data.fuel / TRConfig.FUEL_CAPACITY.get();
             if (pct > 0.0 && pct < 0.10) {
@@ -166,7 +154,6 @@ public final class CruiseController {
             if (rt.lowFuelCooldown > 0) rt.lowFuelCooldown--;
         }
 
-        // —— 动力轨冲量 ——
         if (onChargedRail && !railPos.equals(rt.lastBoostRail)) {
             rt.boostExtra += TRConfig.BOOST_IMPULSE.get();
             rt.lastBoostRail = railPos.immutable();
@@ -193,13 +180,11 @@ public final class CruiseController {
             newSpeed = Math.max(speed - (braking ? eBrake : brake) * DT, Math.max(target, 0.0));
         }
 
-        // —— 油耗 ∝ 速度平方 ——
         if (furnaceHead && newSpeed > 0.1 && data.fuel > 0.0) {
             data.fuel = Math.max(0.0,
                     data.fuel - TRConfig.FUEL_RATE.get() * (newSpeed * newSpeed) / (48.0 * 48.0));
         }
 
-        // —— 粒子 ——
         if (braking && newSpeed > 4.0 && head.tickCount % 2 == 0) {
             level.sendParticles(ParticleTypes.LAVA,
                     head.getX(), head.getY() + 0.1, head.getZ(), 2, 0.4, 0.05, 0.4, 0.0);
@@ -219,7 +204,6 @@ public final class CruiseController {
                     f(rt.boostExtra), onStopRail, TrainState.byOrdinal(data.state), f(data.fuel));
         }
 
-        // —— 写回（服务端唯一权威）——
         Vec3 motion = head.getDeltaMovement();
         Vec3 dir;
         if (Math.hypot(motion.x, motion.z) > 1.0e-4) {
@@ -238,9 +222,7 @@ public final class CruiseController {
             return;
         }
         double bpt = newSpeed / 20.0;
-        // M9fix: 原版 moveAlongTrack 对载人矿车(isVehicle)每刻水平动量 ×0.75
-        // （日志平衡点 1.05 = 0.75×(1.05+0.35) 实证）。预除补偿，
-        // 原版乘回 0.75 后实际位移正好 = newSpeed。
+
         double comp = head.isVehicle() ? bpt / 0.75 : bpt;
         head.setDeltaMovement(dir.x * comp, motion.y, dir.z * comp);
     }

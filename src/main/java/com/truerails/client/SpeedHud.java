@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 
-/** 速度计 HUD：经验条位置。M4：左侧追加燃料微缩条（有动力车头时）。 */
 public final class SpeedHud implements LayeredDraw.Layer {
     private static final ResourceLocation BAR_BG =
             ResourceLocation.fromNamespaceAndPath("truerails", "hud/speed_bar_background");
@@ -63,7 +62,6 @@ public final class SpeedHud implements LayeredDraw.Layer {
             g.blitSprite(ARROW, ax, y, 5, 5);
         }
 
-        // 燃料微缩条（§8：有车头时，速度条左端上方）
         if (ClientHudState.hasFurnace) {
             int fx = x;
             int fy = y - 11;

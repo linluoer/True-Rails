@@ -26,10 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/** 链条=车钩：选中→连接；潜行空手右键断开并返还链条。 */
 @EventBusSubscriber(modid = TrueRails.MODID)
 public final class LinkHandler {
-    private static final Map<UUID, UUID> SELECTION = new HashMap<>(); // player -> cart
+    private static final Map<UUID, UUID> SELECTION = new HashMap<>();
     private static final double LINK_RANGE = 8.0;
 
     @SubscribeEvent
@@ -57,7 +56,6 @@ public final class LinkHandler {
         UUID selectedId = SELECTION.get(player.getUUID());
         AbstractMinecart selected = TrainGraph.resolve(level, selectedId);
 
-        // 无有效选中 / 重复点同一辆 → (重新)选中（§2.1：粒子提示）
         if (selected == null || selected == cart) {
             SELECTION.put(player.getUUID(), cart.getUUID());
             level.sendParticles(ParticleTypes.HAPPY_VILLAGER,
@@ -66,7 +64,6 @@ public final class LinkHandler {
             return;
         }
 
-        // 距离过远取消选中（§2.1）
         if (selected.distanceTo(cart) > LINK_RANGE) {
             SELECTION.remove(player.getUUID());
             player.displayClientMessage(Component.translatable("truerails.link.too_far"), true);
@@ -87,7 +84,7 @@ public final class LinkHandler {
         da.owner = player.getUUID();
         db.owner = player.getUUID();
 
-        if (!player.getAbilities().instabuild) held.shrink(1); // 消耗1链条
+        if (!player.getAbilities().instabuild) held.shrink(1);
         SELECTION.remove(player.getUUID());
 
         level.playSound(null, cart.blockPosition(), SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 1.0f, 1.0f);
@@ -97,12 +94,11 @@ public final class LinkHandler {
         player.displayClientMessage(Component.translatable("truerails.link.linked"), true);
     }
 
-    /** 返回失败消息 key，null = 通过。 */
     private static String validate(ServerLevel level, AbstractMinecart a, AbstractMinecart b) {
         TrainData da = a.getData(TRAttachments.TRAIN_DATA);
         TrainData db = b.getData(TRAttachments.TRAIN_DATA);
         if (!da.hasFreeSlot() || !db.hasFreeSlot()) return "truerails.link.fail_full";
-        // 动力矿车只许 1 个连接（永远在端点当车头，§2.3）
+
         if (a instanceof MinecartFurnace && da.linkCount() >= 1) return "truerails.link.fail_furnace_link";
         if (b instanceof MinecartFurnace && db.linkCount() >= 1) return "truerails.link.fail_furnace_link";
 
@@ -136,7 +132,6 @@ public final class LinkHandler {
         }
     }
 
-    /** 自动断链（距离 >8，§2.5）：链条掉落在两车中点。 */
     public static void unlinkPair(ServerLevel level, AbstractMinecart a, AbstractMinecart b) {
         a.getData(TRAttachments.TRAIN_DATA).removeNeighbor(b.getUUID());
         b.getData(TRAttachments.TRAIN_DATA).removeNeighbor(a.getUUID());

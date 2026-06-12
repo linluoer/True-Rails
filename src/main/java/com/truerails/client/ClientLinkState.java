@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** 纯数据类：链接对缓存（实体网络 id），服务端每秒重发，过期自动清除。 */
 public final class ClientLinkState {
     public record Link(int partnerId, long expireMillis) {}
 
@@ -25,7 +24,6 @@ public final class ClientLinkState {
         }
     }
 
-    /** 无向邻接表（ClientDrive 仲裁用）。 */
     public static Map<Integer, List<Integer>> adjacency() {
         Map<Integer, List<Integer>> adj = new HashMap<>();
         for (Map.Entry<Integer, Link> e : LINKS.entrySet()) {

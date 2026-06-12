@@ -33,7 +33,7 @@ public final class ClientInput {
                 PacketDistributor.sendToServer(new DriveInputPayload(mask));
                 lastMask = mask;
             }
-            // M9: 服务端权威下 motion 包不连续，HUD 测速用位置差分
+
             Vec3 pos = cart.position();
             if (lastPos != null) {
                 ClientHudState.actualSpeed =
@@ -54,7 +54,6 @@ public final class ClientInput {
         }
     }
 
-    /** 乘车时取消原版经验条/等级数字。 */
     @SubscribeEvent
     public static void onRenderGuiLayer(RenderGuiLayerEvent.Pre event) {
         Minecraft mc = Minecraft.getInstance();

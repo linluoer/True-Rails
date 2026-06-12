@@ -1,6 +1,5 @@
 package com.truerails.client;
 
-/** 纯数据类：不得引入任何 Minecraft 客户端类（网络包 handler 会引用本类）。 */
 public final class ClientHudState {
     public static float actualSpeed;
     public static float displaySpeed;

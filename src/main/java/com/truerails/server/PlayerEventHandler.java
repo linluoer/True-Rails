@@ -9,11 +9,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-/**
- * M2：输入掩码的服务端兜底清理。
- * 客户端下车时会发一次全 0 输入，但丢包/掉线时必须由服务端清除，
- * 否则矿车会带着残留的 W 输入永远加速。
- */
 @EventBusSubscriber(modid = TrueRails.MODID)
 public final class PlayerEventHandler {
 
@@ -29,7 +24,7 @@ public final class PlayerEventHandler {
             rt.inputMask = 0;
             rt.driver = null;
         }
-        // 下车保留巡航（§11 可配置项，默认保留）：data.cruise 不清零
+
     }
 
     @SubscribeEvent

@@ -11,7 +11,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.MinecartFurnace;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/** C→S 调速 GUI 设档。 */
 public record SetCruisePayload(int cartId, byte gear) implements CustomPacketPayload {
 
     public static final Type<SetCruisePayload> TYPE =
