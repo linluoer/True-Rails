@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "com.truerails.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractMinecartMixin",
+    "MinecartFurnaceMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mixins]]
+config = "truerails.mixins.json"
+
+[[mods]]
+modId = "truerails"
+version = "1.0.0"
+displayName = "TrueRails"
+logoFile = "logo.png"
+authors = "liluo23"
+description = '''纯玩法铁路增强：列车编组、高速巡航、弯道安全、定点停车、无人货运。不添加任何新物品/方块/实体，卸载后存档无损。'''
+
+[[dependencies.truerails]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.truerails]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.22)"
+ordering = "NONE"
+side = "BOTH"

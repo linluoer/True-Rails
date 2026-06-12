@@ -1,0 +1,22 @@
+{
+  "whistle_short": {
+    "subtitle": "truerails.subtitle.whistle_short",
+    "sounds": ["truerails:whistle_short"]
+  },
+  "whistle_long": {
+    "subtitle": "truerails.subtitle.whistle_long",
+    "sounds": ["truerails:whistle_long"]
+  },
+  "rail_clack": {
+    "subtitle": "truerails.subtitle.rail_clack",
+    "sounds": ["truerails:rail_clack"]
+  },
+  "brake_squeal": {
+    "subtitle": "truerails.subtitle.brake_squeal",
+    "sounds": ["truerails:brake_squeal"]
+  },
+  "low_fuel": {
+    "subtitle": "truerails.subtitle.low_fuel",
+    "sounds": ["truerails:low_fuel"]
+  }
+}
